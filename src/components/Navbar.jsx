@@ -60,12 +60,12 @@ const Navbar = () => {
       }`}
     >
       {/* Top bar */}
-      <div className="flex h-18 items-center justify-between px-6 md:px-12">
-        <NavLink to="/" className="h-12 w-16 shrink-0">
+      <div className="flex h-18 items-center justify-between px-6 md:px-12 ">
+        <NavLink to="/" className="h-12 w-16 shrink-0 rounded-3xl overflow-hidden">
           <img
             src={logo}
             alt="Travel Diary"
-            className="h-full w-full object-contain"
+            className="h-full w-full object-contain "
           />
         </NavLink>
 
