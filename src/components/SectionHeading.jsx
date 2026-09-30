@@ -10,7 +10,7 @@ const item = {
   hidden: { opacity: 0, y: 50 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
-const SectionHeading = ({element, elementData, heading,highlightedHeading ,afterText}) => {
+const SectionHeading = ({element, elementData, heading,highlightedHeading ,afterText ,className}) => {
   return (
     <>
     
@@ -19,7 +19,7 @@ const SectionHeading = ({element, elementData, heading,highlightedHeading ,after
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
-        className="relative z-10 flex flex-col items-center gap-5 text-center"
+        className={`relative z-10 flex flex-col items-center gap-5 text-center ${className? className :" " }`}
       >
         <motion.span
           variants={item}

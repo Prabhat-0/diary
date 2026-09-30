@@ -89,7 +89,7 @@ const ContactForm = () => {
     <section className="flex min-h-auto w-full flex-col items-center bg-slate-900 px-6 pb-15 pt-20 text-white md:px-12">
       
       {/* Header */}
-      <SectionHeading element={<FaEnvelope className="text-amber-300 group-hover:translate-x-1" />} elementData="Get in touch" heading="Contact " highlightedHeading="Us"/>
+      <SectionHeading element={<FaEnvelope className="text-amber-300 group-hover:translate-x-1" />} elementData="Get in touch" heading="Contact " highlightedHeading="Us" className="flex-col-reverse"/>
       
       {/* Form: fields fade up one after another when it scrolls into view */}
       <motion.form
