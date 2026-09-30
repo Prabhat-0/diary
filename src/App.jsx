@@ -2,9 +2,10 @@ import Navbar from "./components/Navbar"
 import Services from "./components/Services"
 import Testimonials from "./components/Testimonials"
 import Footer from "./components/Footer"
-import { Route,Routes } from "react-router-dom"
+import { Navigate, Route,Routes } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import ContactPage from "./pages/ContactPage"
+import NotFound from "./components/NotFound"
 
 function App() {
   
@@ -16,7 +17,7 @@ function App() {
           <Route path="/contactUs" element={<ContactPage/>}/>
           <Route path="/services" element={<Services/>}/>
           <Route path="/testimonials" element={<Testimonials/>}/>
-
+          <Route path="*" element={<NotFound/>} />
         </Routes>
       <Footer/>
     </div>
