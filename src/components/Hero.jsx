@@ -89,7 +89,7 @@ const Hero = () => {
           variants={item}
           className="mt-8 flex flex-wrap items-center gap-6"
         >
-          <Button value="Contact Us" path="/contact" />
+          <Button value="Contact Us" path="/contactUs" />
           <NavLink
             to="/services"
             className="group inline-flex items-center gap-2 font-medium text-white/90 transition-colors hover:text-amber-400"
@@ -168,7 +168,7 @@ const Hero = () => {
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
                 <p className="absolute bottom-2 left-3 flex items-center gap-1 text-sm font-semibold">
                   <FaMapMarkerAlt className="text-xs text-amber-400" /> {d.name}
                 </p>

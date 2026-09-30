@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight, FaUserCircle } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
+import SectionHeading from "./SectionHeading";
 
 const testimonials = [
   {
@@ -67,25 +68,8 @@ const Testimonials = () => {
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-center">
         {/* Header */}
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="flex flex-col items-center justify-center gap-5 text-center"
-        >
-          <motion.span
-            variants={item}
-            className="group flex items-center justify-center gap-2 rounded-2xl border border-amber-300 px-6 py-3 transition-shadow duration-150 hover:shadow-sm hover:shadow-amber-200"
-          >
-            <FaUserCircle className="text-amber-300 transition-transform duration-150 group-hover:-translate-x-1" />
-            Our Clients
-          </motion.span>
-          <motion.span variants={item} className="text-4xl font-bold md:text-5xl">
-            What our <span className="text-amber-400">Clients</span> say
-          </motion.span>
-        </motion.div>
-
+        <SectionHeading element={<FaUserCircle className="text-amber-300 transition-transform duration-150 group-hover:-translate-x-1" />} elementData="Our Clients" heading="What our " highlightedHeading="Clients" afterText="say"/>
+  
         {/* Cards */}
         <div className="mt-10 w-full max-w-3xl">
           <motion.div

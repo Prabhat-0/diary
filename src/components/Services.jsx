@@ -12,6 +12,7 @@ import {
   FaRoute,
 } from "react-icons/fa";
 import Button from "../components/Button";
+import SectionHeading from "./SectionHeading";
 
 const services = [
   {
@@ -108,26 +109,8 @@ const Services = () => {
       <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-indigo-500/10 blur-3xl" />
 
       {/* header */}
-      <motion.div
-        variants={container}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="relative z-10 flex flex-col items-center gap-5 text-center"
-      >
-        <motion.span
-          variants={item}
-          className="group flex items-center justify-center gap-2 rounded-2xl border border-amber-300 px-6 py-3 transition-shadow duration-150 hover:shadow-sm hover:shadow-amber-200"
-        >
-          <FaPlane className="text-amber-300 group-hover:translate-x-1" /> What we offer
-        </motion.span>
-        <motion.span
-          variants={item}
-          className="text-3xl font-bold sm:text-4xl md:text-5xl"
-        >
-          Our <span className="text-amber-400">Services</span>
-        </motion.span>
-      </motion.div>
+      <SectionHeading element={<FaPlane className="text-amber-300 group-hover:translate-x-1" />} elementData="What we offer" heading="Our" highlightedHeading="Services"/>
+
 
       {/* cards */}
       <div className="relative z-10 w-full max-w-6xl pt-10">
@@ -176,7 +159,7 @@ const Services = () => {
                   </ul>
 
                   <NavLink
-                    to="/contact"
+                    to="/contactUs"
                     className="mt-auto inline-flex items-center gap-2 pt-6 font-medium text-amber-400 transition-colors hover:text-amber-300"
                   >
                     Learn more
@@ -225,7 +208,7 @@ const Services = () => {
         <p className="w-full max-w-lg text-gray-300">
           Tell us where you want to go and we'll take care of the rest.
         </p>
-        <Button value="Contact Us" path="/contact" />
+        <Button value="Contact Us" path="/contactUs" />
       </motion.div>
     </section>
   );

@@ -1,26 +1,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaCheckCircle, FaEnvelope, FaPaperPlane } from "react-icons/fa";
-
-const initialValues = { name: "", email: "", message: "" };
-
-const validate = (values) => {
-  const errors = {};
-
-  if (!values.name.trim()) errors.name = "Name is required.";
-  else if (values.name.trim().length < 2)
-    errors.name = "Name must be at least 2 characters.";
-
-  if (!values.email.trim()) errors.email = "Email is required.";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
-    errors.email = "Enter a valid email address.";
-
-  if (!values.message.trim()) errors.message = "Message is required.";
-  else if (values.message.trim().length < 10)
-    errors.message = "Message must be at least 10 characters.";
-
-  return errors;
-};
+import SectionHeading from "./SectionHeading";
 
 const container = {
   hidden: {},
@@ -37,17 +18,15 @@ const inputClass = (error) =>
     error ? "border-red-400" : "border-white/20"
   }`;
 
-const Field = ({ label, id, error, children }) => (
+// Label + input + animated error message
+const Field = ({ label, error, children }) => (
   <motion.div variants={item}>
-    <label htmlFor={id} className="mb-2 block text-sm font-medium text-gray-200">
-      {label}
-    </label>
+    <label className="mb-2 block text-sm font-medium text-gray-200">{label}</label>
     {children}
     <AnimatePresence>
       {error && (
         <motion.p
           key={error}
-          id={`${id}-error`}
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
@@ -61,72 +40,57 @@ const Field = ({ label, id, error, children }) => (
   </motion.div>
 );
 
-const Contact = () => {
-  const [values, setValues] = useState(initialValues);
-  const [touched, setTouched] = useState({});
+const ContactForm = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
-
-  const errors = validate(values);
-  const showError = (field) => (touched[field] ? errors[field] : undefined);
-
-  const handleChange = (e) => {
-    setSent(false);
-    setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleBlur = (e) => {
-    setTouched((prev) => ({ ...prev, [e.target.name]: true }));
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTouched({ name: true, email: true, message: true });
+    const newErrors = {};
 
-    if (Object.keys(errors).length > 0) return;
+    // Name: required, more than 2 characters
+    if (!name.trim()) newErrors.name = "Name is required.";
+    else if (name.trim().length <= 2)
+      newErrors.name = "Name must be more than 2 characters.";
 
-    // TODO: send `values` to your backend / email service here
-    console.log("Form submitted:", values);
+    // Email: required, must match pattern
+    if (!email.trim()) newErrors.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "Enter a valid email address.";
 
+    // Message: required, at least 10 characters
+    if (!message.trim()) newErrors.message = "Message is required.";
+    else if (message.trim().length < 10)
+      newErrors.message = "Message must be at least 10 characters.";
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return; // stop if any error
+
+    // TODO: send { name, email, message } to your backend / email service
+    console.log("Form submitted:", { name, email, message });
+
+    setName("");
+    setEmail("");
+    setMessage("");
     setSent(true);
-    setValues(initialValues);
-    setTouched({});
   };
 
-  const fieldProps = (field) => ({
-    id: field,
-    name: field,
-    value: values[field],
-    onChange: handleChange,
-    onBlur: handleBlur,
-    "aria-invalid": !!showError(field),
-    "aria-describedby": showError(field) ? `${field}-error` : undefined,
-    className: inputClass(showError(field)),
-  });
+  // Update a field, clear its error, hide the success message
+  const onType = (setter, field) => (e) => {
+    setter(e.target.value);
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
+    setSent(false);
+  };
 
   return (
     <section className="flex min-h-auto w-full flex-col items-center bg-slate-900 px-6 pb-15 pt-20 text-white md:px-12">
+      
       {/* Header */}
-      <motion.div
-        variants={container}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="flex w-full max-w-2xl flex-col items-center gap-5 text-center"
-      >
-        <motion.h1 variants={item} className="text-4xl font-bold md:text-5xl">
-          Contact <span className="text-amber-400">Us</span>
-        </motion.h1>
-
-        <motion.div
-          variants={item}
-          whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
-          className="flex items-center justify-center gap-2 rounded-2xl border border-amber-300 px-6 py-3 transition-shadow duration-150 hover:shadow-sm hover:shadow-amber-200"
-        >
-          <FaEnvelope />
-          <p className="text-xl">Get in touch</p>
-        </motion.div>
-      </motion.div>
-
+      <SectionHeading element={<FaEnvelope className="text-amber-300 group-hover:translate-x-1" />} elementData="Get in touch" heading="Contact " highlightedHeading="Us"/>
+      
       {/* Form: fields fade up one after another when it scrolls into view */}
       <motion.form
         variants={container}
@@ -138,24 +102,34 @@ const Contact = () => {
         className="mt-10 w-full max-w-4xl space-y-6 rounded-3xl border border-white/15 bg-white/5 p-8 text-left backdrop-blur-xl md:p-10"
       >
         <div className="grid gap-6 sm:grid-cols-2">
-          <Field label="Name" id="name" error={showError("name")}>
-            <input type="text" placeholder="Your name" {...fieldProps("name")} />
+          <Field label="Name" error={errors.name}>
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={onType(setName, "name")}
+              className={inputClass(errors.name)}
+            />
           </Field>
 
-          <Field label="Email" id="email" error={showError("email")}>
+          <Field label="Email" error={errors.email}>
             <input
               type="email"
               placeholder="you@example.com"
-              {...fieldProps("email")}
+              value={email}
+              onChange={onType(setEmail, "email")}
+              className={inputClass(errors.email)}
             />
           </Field>
         </div>
 
-        <Field label="Message" id="message" error={showError("message")}>
+        <Field label="Message" error={errors.message}>
           <textarea
             rows={5}
             placeholder="How can we help you?"
-            {...fieldProps("message")}
+            value={message}
+            onChange={onType(setMessage, "message")}
+            className={inputClass(errors.message)}
           />
         </Field>
 
@@ -188,4 +162,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default ContactForm;
