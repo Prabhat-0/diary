@@ -41,55 +41,66 @@ const Field = ({ label, error, children }) => (
 );
 
 const ContactForm = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [fields, setFields] = useState({
+    name: "",
+    email: "",
+    message: "",
+  })
+  
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
 
+  {/** handling the input changes  */}
+  const handleChange=(e)=>{
+      const{name,value}=e.target;
+      setFields(prev=>({...prev,[name]:value}));
+      setErrors(prev=>({...prev,[name]:undefined}));
+      setSent(false);
+  }
+  {/** handling the submit of the form */}
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
 
     // Name: required, more than 2 characters
-    if (!name.trim()) newErrors.name = "Name is required.";
-    else if (name.trim().length <= 2)
+    if (!fields.name.trim()) newErrors.name = "Name is required.";
+    else if (fields.name.trim().length <= 2)
       newErrors.name = "Name must be more than 2 characters.";
 
     // Email: required, must match pattern
-    if (!email.trim()) newErrors.email = "Email is required.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    if (!fields.email.trim()) newErrors.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email))
       newErrors.email = "Enter a valid email address.";
 
     // Message: required, at least 10 characters
-    if (!message.trim()) newErrors.message = "Message is required.";
-    else if (message.trim().length < 10)
+    if (!fields.message.trim()) newErrors.message = "Message is required.";
+    else if (fields.message.trim().length < 10)
       newErrors.message = "Message must be at least 10 characters.";
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return; // stop if any error
 
     // TODO: send { name, email, message } to your backend / email service
-    console.log("Form submitted:", { name, email, message });
+    console.log("Form submitted:", { name:fields.name, email:fields.email, message:fields.message });
 
-    setName("");
-    setEmail("");
-    setMessage("");
+    setFields({ name: "", email: "", message: "" });
     setSent(true);
+    setTimeout(()=>{
+      setSent(false);
+    },2000)
+   
   };
 
-  // Update a field, clear its error, hide the success message
-  const onType = (setter, field) => (e) => {
-    setter(e.target.value);
-    setErrors((prev) => ({ ...prev, [field]: undefined }));
-    setSent(false);
-  };
+
 
   return (
     <section className="flex min-h-auto w-full flex-col items-center bg-slate-900 px-6 pb-15 pt-20 text-white md:px-12">
       
       {/* Header */}
-      <SectionHeading element={<FaEnvelope className="text-amber-300 group-hover:translate-x-1" />} elementData="Get in touch" heading="Contact " highlightedHeading="Us" className="flex-col-reverse"/>
+      <SectionHeading 
+      flex="flex flex-col-reverse gap-5"
+      element={<FaEnvelope 
+      className="text-amber-300 group-hover:translate-x-1" />} elementData="Get in touch" heading="Contact " highlightedHeading="Us" className="flex-col-reverse"/>
       
       {/* Form: fields fade up one after another when it scrolls into view */}
       <motion.form
@@ -105,9 +116,10 @@ const ContactForm = () => {
           <Field label="Name" error={errors.name}>
             <input
               type="text"
+              name="name"
               placeholder="Your name"
-              value={name}
-              onChange={onType(setName, "name")}
+              value={fields.name}
+              onChange={handleChange}
               className={inputClass(errors.name)}
             />
           </Field>
@@ -115,9 +127,10 @@ const ContactForm = () => {
           <Field label="Email" error={errors.email}>
             <input
               type="email"
+              name="email"
               placeholder="you@example.com"
-              value={email}
-              onChange={onType(setEmail, "email")}
+              value={fields.email}
+              onChange={handleChange}
               className={inputClass(errors.email)}
             />
           </Field>
@@ -126,9 +139,10 @@ const ContactForm = () => {
         <Field label="Message" error={errors.message}>
           <textarea
             rows={5}
+            name="message"
             placeholder="How can we help you?"
-            value={message}
-            onChange={onType(setMessage, "message")}
+            value={fields.message}
+            onChange={handleChange}
             className={inputClass(errors.message)}
           />
         </Field>
